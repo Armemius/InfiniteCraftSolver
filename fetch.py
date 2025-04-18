@@ -81,6 +81,7 @@ def main():
     with open("elements.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(initial_elements) + "\n")
         logger.info("Created elements.txt with initial elements")
+        f.close()
 
     iteration = 0
     while True:
@@ -99,11 +100,12 @@ def main():
                     result, emoji, is_new = get_result(first, second)
                     break
                 except requests.exceptions.RequestException:
-                    time.sleep(random.uniform(30, 60))  # Rate limit sucks
+                    time.sleep(random.uniform(30, 300))  # Rate limit sucks
             if result and result != "Nothing":
                 if result not in elements:
                     with open("elements.txt", "a", encoding="utf-8") as f:
                         f.write(f"{emoji} {result}\n")
+                        f.close()
                 elements.add(result)
             if is_new:
                 logger.info(f"Discovered new element: {result}")
@@ -115,6 +117,7 @@ def main():
             used_combinations.add((second, first))
             with open("recipies.txt", "a") as f:
                 f.write(f"{first} + {second} = {result}\n")
+                f.close()
         logger.info(
             f"Iteration {iteration} "
             f"| Current elements: {len(elements)} "
